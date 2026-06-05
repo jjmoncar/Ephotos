@@ -1,0 +1,83 @@
+databases:
+  - name: ephotos-db
+    databaseName: ephotos
+    user: ephotos
+    plan: free
+
+services:
+  - type: redis
+    name: ephotos-redis
+    ipAllowList: []
+    plan: free
+
+  - type: web
+    name: ephotos-web
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: flask db upgrade && gunicorn run:app
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ephotos-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ephotos-redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: ephotos-redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: ephotos-redis
+          property: connectionString
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+      # Google Drive Config.
+      # Crearás estos archivos de forma segura en el Dashboard de Render usando "Secret Files"
+      - key: GOOGLE_AUTH_METHOD
+        value: service_account
+      - key: GOOGLE_SERVICE_ACCOUNT_FILE
+        value: /etc/secrets/service_account.json
+
+  - type: worker
+    name: ephotos-worker
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A celery_app.celery worker --loglevel=info
+    plan: starter # Workers no tienen tier gratuito en Render, usa plan 'starter'
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ephotos-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ephotos-redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: ephotos-redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: ephotos-redis
+          property: connectionString
+      - key: GOOGLE_AUTH_METHOD
+        value: service_account
+      - key: GOOGLE_SERVICE_ACCOUNT_FILE
+        value: /etc/secrets/service_account.json
