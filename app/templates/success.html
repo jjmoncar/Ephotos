@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="text-align: center;">
+    <h2 data-i18n="upload.success">¡Archivos enviados con éxito!</h2>
+    <p>Gracias por compartir tus fotos y videos.</p>
+    <a href="{{ url_for('upload.view_upload', token=token) }}" class="btn-primary" style="display: inline-block; margin-top: 20px;">Subir más</a>
+</div>
+{% endblock %}

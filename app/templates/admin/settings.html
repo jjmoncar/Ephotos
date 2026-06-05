@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="card">
+    <h2>Configuración General</h2>
+    
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('admin.authorize') }}" class="btn-primary" style="background: var(--accent-purple); display: inline-block;">Autorizar Google Drive (OAuth2)</a>
+    </div>
+
+    <form action="{{ url_for('admin.settings') }}" method="POST">
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="max_photos_per_user">Máximo de fotos por persona</label>
+            <input type="number" id="max_photos_per_user" name="max_photos_per_user" value="{{ config.get('max_photos_per_user', '20') }}" class="input-field">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="max_videos_per_user">Máximo de videos por persona</label>
+            <input type="number" id="max_videos_per_user" name="max_videos_per_user" value="{{ config.get('max_videos_per_user', '5') }}" class="input-field">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="max_photo_size_mb">Tamaño máximo por foto (MB)</label>
+            <input type="number" id="max_photo_size_mb" name="max_photo_size_mb" value="{{ config.get('max_photo_size_mb', '50') }}" class="input-field">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="max_video_size_mb">Tamaño máximo por video (MB)</label>
+            <input type="number" id="max_video_size_mb" name="max_video_size_mb" value="{{ config.get('max_video_size_mb', '500') }}" class="input-field">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="qr_expiry_hours">Expiración del QR (Horas)</label>
+            <input type="number" id="qr_expiry_hours" name="qr_expiry_hours" value="{{ config.get('qr_expiry_hours', '24') }}" class="input-field">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="drive_root_folder_id">ID de la carpeta raíz de Google Drive</label>
+            <input type="text" id="drive_root_folder_id" name="drive_root_folder_id" value="{{ config.get('drive_root_folder_id', '') }}" class="input-field">
+            <small style="color: var(--text-muted);">Dejar vacío para guardar en la raíz.</small>
+        </div>
+        
+        <button type="submit" class="btn-primary">Guardar Cambios</button>
+    </form>
+</div>
+{% endblock %}

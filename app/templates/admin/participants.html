@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="card">
+    <h2>Participantes</h2>
+    <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Carpeta Drive</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <td style="padding: 0.5rem 0;">{{ user.full_name }}</td>
+                <td>{{ user.email or '-' }}</td>
+                <td>{{ user.phone or '-' }}</td>
+                <td>{{ user.folder_name }}</td>
+                <td>
+                    {% if user.is_blocked %}
+                        <span style="color: #ff4444;">Bloqueado</span>
+                    {% else %}
+                        <span style="color: var(--accent-green);">Activo</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="{{ url_for('admin.block_participant', id=user.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                            {{ 'Desbloquear' if user.is_blocked else 'Bloquear' }}
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 1rem;">No hay participantes aún.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

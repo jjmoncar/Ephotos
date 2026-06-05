@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="card">
+    <h2>Gestión de Código QR</h2>
+    
+    {% if session.get('last_qr_img') %}
+        <div style="text-align: center; margin: 2rem 0;">
+            <img src="data:image/png;base64,{{ session['last_qr_img'] }}" alt="QR Code" style="max-width: 300px; border: 4px solid var(--accent-cyan); border-radius: 8px;">
+            <p><strong>Válido hasta:</strong> {{ qr_session.expires_at.strftime('%Y-%m-%d %H:%M') if qr_session.expires_at else 'Nunca' }}</p>
+            <p><strong>Enlace:</strong> <a href="{{ url_for('upload.view_upload', token=qr_session.token, _external=True) }}" target="_blank">{{ url_for('upload.view_upload', token=qr_session.token, _external=True) }}</a></p>
+        </div>
+    {% elif qr_session %}
+        <div class="flash info">Hay un código QR activo pero no está previsualizado en esta sesión. Genera uno nuevo para verlo.</div>
+    {% else %}
+        <div class="flash warning">No hay ningún código QR activo.</div>
+    {% endif %}
+
+    <form action="{{ url_for('admin.qr_generate') }}" method="POST" style="text-align: center;">
+        <button type="submit" class="btn-primary">Generar Nuevo QR</button>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem;">Esto invalidará cualquier código anterior.</p>
+    </form>
+</div>
+{% endblock %}

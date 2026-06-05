@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2 data-i18n="register.title">¡Comparte tus fotos!</h2>
+    <form action="{{ url_for('upload.register', token=token) }}" method="POST">
+        <div class="form-group">
+            <label for="full_name" data-i18n="register.name">Tu nombre</label>
+            <input type="text" id="full_name" name="full_name" class="input-field" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email" data-i18n="register.email">Correo electrónico</label>
+            <input type="email" id="email" name="email" class="input-field">
+        </div>
+        
+        <div class="form-group">
+            <label for="phone" data-i18n="register.phone">Número de celular</label>
+            <input type="tel" id="phone" name="phone" class="input-field">
+        </div>
+        
+        <button type="submit" class="btn-primary" data-i18n="register.submit">Continuar</button>
+    </form>
+</div>
+{% endblock %}

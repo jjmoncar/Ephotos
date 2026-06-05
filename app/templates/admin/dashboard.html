@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="card">
+    <h2>Dashboard</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div class="card" style="padding: 1rem; text-align: center;">
+            <h3>Usuarios</h3>
+            <p style="font-size: 2rem; color: var(--accent-cyan);">{{ total_users }}</p>
+        </div>
+        <div class="card" style="padding: 1rem; text-align: center;">
+            <h3>Fotos</h3>
+            <p style="font-size: 2rem; color: var(--accent-purple);">{{ total_photos }}</p>
+        </div>
+        <div class="card" style="padding: 1rem; text-align: center;">
+            <h3>Videos</h3>
+            <p style="font-size: 2rem; color: var(--accent-green);">{{ total_videos }}</p>
+        </div>
+        <div class="card" style="padding: 1rem; text-align: center;">
+            <h3>Espacio (MB)</h3>
+            <p style="font-size: 2rem; color: var(--text-primary);">{{ total_mb }}</p>
+        </div>
+    </div>
+    
+    <h3>Últimas subidas</h3>
+    <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <th>Usuario</th>
+                <th>Archivo</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for upload in recent_uploads %}
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <td>{{ upload.user.full_name }}</td>
+                <td>{{ upload.original_name }}</td>
+                <td>{{ upload.status }}</td>
+                <td>{{ upload.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

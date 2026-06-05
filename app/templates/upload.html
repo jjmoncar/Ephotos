@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Bienvenido, {{ user.full_name }}</h2>
+    <p>Selecciona las fotos o videos que deseas enviar.</p>
+    
+    <div id="upload-zone" class="upload-zone">
+        <input type="file" id="file-input" multiple accept="image/*,video/*" class="hidden">
+        <button id="btn-select" class="btn-primary" data-i18n="upload.button">Seleccionar archivos</button>
+    </div>
+    
+    <div id="preview-list" class="preview-list"></div>
+    
+    <button id="btn-upload" class="btn-primary hidden">Enviar archivos</button>
+    
+    <div id="progress-container" class="hidden">
+        <p id="progress-text" data-i18n="upload.progress">Subiendo...</p>
+        <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const token = "{{ token }}";
+</script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}

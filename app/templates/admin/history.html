@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="card">
+    <h2>Historial de Subidas</h2>
+    <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <th>Usuario</th>
+                <th>Archivo</th>
+                <th>Tamaño (MB)</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Error</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for upload in uploads %}
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <td style="padding: 0.5rem 0;">{{ upload.user.full_name }}</td>
+                <td style="word-break: break-all;">{{ upload.original_name }}</td>
+                <td>{{ "%.2f"|format(upload.file_size / (1024 * 1024)) }}</td>
+                <td>{{ upload.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    {% if upload.status == 'success' %}
+                        <span style="color: var(--accent-green);">Éxito</span>
+                    {% elif upload.status == 'error' %}
+                        <span style="color: #ff4444;">Error</span>
+                    {% else %}
+                        <span style="color: var(--accent-cyan);">Pendiente</span>
+                    {% endif %}
+                </td>
+                <td style="color: #ff4444; font-size: 0.8rem;">{{ upload.error_msg or '-' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 1rem;">No hay historial de subidas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

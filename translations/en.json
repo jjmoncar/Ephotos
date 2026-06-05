@@ -1,0 +1,10 @@
+{
+  "register.title": "Share your photos!",
+  "register.name": "Your name",
+  "register.email": "Email address",
+  "register.phone": "Phone number",
+  "register.submit": "Continue",
+  "upload.button": "Select files",
+  "upload.progress": "Uploading {n} of {total}...",
+  "upload.success": "Files uploaded successfully!"
+}
