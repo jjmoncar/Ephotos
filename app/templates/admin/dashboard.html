@@ -2,7 +2,16 @@
 
 {% block admin_content %}
 <div class="card">
-    <h2>Dashboard</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+        <h2>Dashboard</h2>
+        <div style="display: flex; gap: 0.5rem;">
+            <form action="{{ url_for('admin.retry_all_uploads') }}" method="POST" style="margin: 0;">
+                <button type="submit" style="background: var(--accent-purple); color: #fff; padding: 0.5rem 1rem; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-family: inherit;">🔄 Reintentar todo</button>
+            </form>
+            <a href="{{ url_for('admin.authorize') }}" style="background: var(--accent-cyan); color: #000; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: bold; font-family: inherit;">🔑 Autorizar Google Drive</a>
+        </div>
+    </div>
+    
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
         <div class="card" style="padding: 1rem; text-align: center;">
             <h3>Usuarios</h3>
@@ -30,15 +39,33 @@
                 <th>Archivo</th>
                 <th>Estado</th>
                 <th>Fecha</th>
+                <th style="text-align: right;">Acción</th>
             </tr>
         </thead>
         <tbody>
             {% for upload in recent_uploads %}
             <tr style="border-bottom: 1px solid var(--border-subtle);">
-                <td>{{ upload.user.full_name }}</td>
+                <td style="padding: 0.5rem 0;">{{ upload.user.full_name }}</td>
                 <td>{{ upload.original_name }}</td>
-                <td>{{ upload.status }}</td>
+                <td>
+                    {% if upload.status == 'success' %}
+                        <span style="color: var(--accent-green);">Éxito</span>
+                    {% elif upload.status == 'error' %}
+                        <span style="color: #ff4444;">Error</span>
+                    {% else %}
+                        <span style="color: var(--accent-cyan);">Pendiente</span>
+                    {% endif %}
+                </td>
                 <td>{{ upload.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td style="text-align: right; padding: 0.5rem 0;">
+                    {% if upload.status != 'success' %}
+                    <form action="{{ url_for('admin.retry_upload', id=upload.id) }}" method="POST" style="display: inline;">
+                        <button type="submit" style="background: none; border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-family: inherit;">Reintentar</button>
+                    </form>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

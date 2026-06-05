@@ -2,7 +2,13 @@
 
 {% block admin_content %}
 <div class="card">
-    <h2>Historial de Subidas</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+        <h2 style="margin-bottom: 0;">Historial de Subidas</h2>
+        <form action="{{ url_for('admin.retry_all_uploads') }}" method="POST" style="margin: 0;">
+            <button type="submit" style="background: var(--accent-purple); color: #fff; padding: 0.5rem 1rem; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-family: inherit;">🔄 Reintentar todo</button>
+        </form>
+    </div>
+    
     <table style="width: 100%; text-align: left; border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid var(--border-subtle);">
@@ -12,6 +18,7 @@
                 <th>Fecha</th>
                 <th>Estado</th>
                 <th>Error</th>
+                <th style="text-align: right;">Acción</th>
             </tr>
         </thead>
         <tbody>
@@ -30,11 +37,20 @@
                         <span style="color: var(--accent-cyan);">Pendiente</span>
                     {% endif %}
                 </td>
-                <td style="color: #ff4444; font-size: 0.8rem;">{{ upload.error_msg or '-' }}</td>
+                <td style="color: #ff4444; font-size: 0.8rem; max-width: 200px; word-break: break-all;">{{ upload.error_msg or '-' }}</td>
+                <td style="text-align: right; padding: 0.5rem 0;">
+                    {% if upload.status != 'success' %}
+                    <form action="{{ url_for('admin.retry_upload', id=upload.id) }}" method="POST" style="display: inline;">
+                        <button type="submit" style="background: none; border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-family: inherit;">Reintentar</button>
+                    </form>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="6" style="text-align: center; padding: 1rem;">No hay historial de subidas.</td>
+                <td colspan="7" style="text-align: center; padding: 1rem;">No hay historial de subidas.</td>
             </tr>
             {% endfor %}
         </tbody>

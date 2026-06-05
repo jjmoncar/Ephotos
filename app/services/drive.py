@@ -18,7 +18,7 @@ def get_drive_service_account():
     )
     return build("drive", "v3", credentials=credentials)
 
-def get_oauth2_flow():
+def get_oauth2_flow(state=None):
     client_secrets = os.getenv("GOOGLE_OAUTH2_CLIENT_SECRETS", "credentials/oauth2_client_secrets.json")
     redirect_uri = os.getenv("OAUTH2_REDIRECT_URI", "http://localhost:5000/oauth2callback")
     
@@ -29,6 +29,7 @@ def get_oauth2_flow():
         client_secrets,
         scopes=SCOPES,
         redirect_uri=redirect_uri,
+        state=state
     )
 
 def get_drive_oauth2():

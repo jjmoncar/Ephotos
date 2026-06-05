@@ -1,5 +1,11 @@
 import os
+import sys
 import logging
+
+# Ensure project root is in sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -42,5 +48,10 @@ def create_app():
         from app.routes import upload, admin
         app.register_blueprint(upload.bp)
         app.register_blueprint(admin.bp)
+        
+    @app.route('/')
+    def index():
+        from flask import redirect, url_for
+        return redirect(url_for('admin.dashboard'))
         
     return app
