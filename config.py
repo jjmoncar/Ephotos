@@ -8,7 +8,9 @@ class Config:
     SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "dev-secret")
     
     db_url = os.getenv("DATABASE_URL", "sqlite:///data/qr_uploader.db")
-    if db_url.startswith("sqlite:///data/"):
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+    elif db_url.startswith("sqlite:///data/"):
         db_path = os.path.join(basedir, "data", "qr_uploader.db")
         db_url = f"sqlite:///{db_path}"
         
